@@ -1,0 +1,842 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="ACtoYou">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、Sora是什么？Sora官方链接：https:&#x2F;&#x2F;openai.com&#x2F;sora &amp;nbsp;&amp;nbsp;视频模型领头羊Runway Gen 2、Pika等AI视频工具，都还在突破几秒内的连贯性，而OpenAI，已经达到了史诗级的纪录。 OpenAI，永远快别人一步！！！！ 像ChatGPT成功抢了Claude的头条一样，这一次，谷歌核弹级大杀器Gemini 1.5才推出没几个小时，全世界的目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenAI Sora：60s超长长度、超强语义理解、世界模型。浅析文生视频模型Sora以及技术原理简介">
+<meta property="og:url" content="http://example.com/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="ChatGPT指南">
+<meta property="og:description" content="一、Sora是什么？Sora官方链接：https:&#x2F;&#x2F;openai.com&#x2F;sora &amp;nbsp;&amp;nbsp;视频模型领头羊Runway Gen 2、Pika等AI视频工具，都还在突破几秒内的连贯性，而OpenAI，已经达到了史诗级的纪录。 OpenAI，永远快别人一步！！！！ 像ChatGPT成功抢了Claude的头条一样，这一次，谷歌核弹级大杀器Gemini 1.5才推出没几个小时，全世界的目">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE1.png">
+<meta property="og:image" content="http://example.com/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE2.png">
+<meta property="og:image" content="http://example.com/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE3.png">
+<meta property="og:image" content="http://example.com/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE4.png">
+<meta property="article:published_time" content="2024-02-18T14:21:30.000Z">
+<meta property="article:modified_time" content="2024-02-18T14:30:15.035Z">
+<meta property="article:author" content="ACtoYou">
+<meta property="article:tag" content="OpenAI Sora">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE1.png">
+  
+  
+  
+  <title>OpenAI Sora：60s超长长度、超强语义理解、世界模型。浅析文生视频模型Sora以及技术原理简介 - ChatGPT指南</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"WxERJ8Shpl9p7eFousRDmGdn-gzGzoHsz","app_key":"l8xFc8OEcHT80gfJz7AYpiEK","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>ACtoYou</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="OpenAI Sora：60s超长长度、超强语义理解、世界模型。浅析文生视频模型Sora以及技术原理简介"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-18 22:21" pubdate>
+          2024年2月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">OpenAI Sora：60s超长长度、超强语义理解、世界模型。浅析文生视频模型Sora以及技术原理简介</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、Sora是什么？"><a href="#一、Sora是什么？" class="headerlink" title="一、Sora是什么？"></a>一、Sora是什么？</h1><p>Sora官方链接：<a target="_blank" rel="noopener" href="https://openai.com/sora">https://openai.com/sora</a></p>
+<p>&nbsp;&nbsp;视频模型领头羊Runway Gen 2、Pika等AI视频工具，都还在突破几秒内的连贯性，而OpenAI，已经达到了史诗级的纪录。</p>
+<p><strong>OpenAI，永远快别人一步！！！！</strong></p>
+<p>像ChatGPT成功抢了Claude的头条一样，这一次，谷歌核弹级大杀器Gemini 1.5才推出没几个小时，全世界的目光就被OpenAI的Sora抢了去。</p>
+<p>100万token的上下文，仅靠一本语法书就学会了一门全新的语言，如此震撼的技术进步，在Sora的荣光下被衬得暗淡无光，着实令人唏嘘。</p>
+<p><strong>三个词总结 “60s超长长度”、“单视频多角度镜头”，“世界模型”</strong></p>
+<p><strong>60s超长长度：</strong> pika和runway（视频模型领头羊）还只能生成4s视频，这60s直接拉开了差距。而且动作连续，还有一定的艺术性，没有生硬的感觉。</p>
+<p><strong>单视频多角度镜头：</strong> 在60s的视频内，可以在保持主角色不变的高度一致性的同时，还生成多个不同角度的分镜。Sora能在同一视频中设计出多个镜头，同时保持角色和视觉风格的一致性。</p>
+<p>要知道，以前的AI视频，都单镜头生成的。。</p>
+<p><strong>世界模型：</strong> Sora有时能够模拟对世界状态产生简单影响的行为。例如，画家可以在画布上持续添加新的笔触，或者一个人吃汉堡时留下咬痕。这个就厉害了，基于虚幻引擎5(Unreal-Engine-5)的Sora它是能理解物理世界的。</p>
+<h1 id="二、为什么这一次Sora得到全世界这么多关注？"><a href="#二、为什么这一次Sora得到全世界这么多关注？" class="headerlink" title="二、为什么这一次Sora得到全世界这么多关注？"></a>二、为什么这一次Sora得到全世界这么多关注？</h1><p><strong>1. 技术上遥遥领先</strong></p>
+<p>&nbsp;&nbsp;跟之前的runway和pika可以说不属于一个种群了（类似于猿猴与人类），<strong>Sora是跟ChatGPT一样是有理解能力的，它可以感知真实的物理世界和自然语言。</strong></p>
+<p>OpenAI究竟是怎么做到的？根据官网介绍，「通过一次性为模型提供多帧的预测，我们解决了一个具有挑战性的问题。」</p>
+<p>显然，这个王炸级技术有着革命般的意义，连Sam Altman都沉迷到不能自拔！</p>
+<p>他不仅疯狂发推安利，而且还亲自下场为网友生成视频：你们随意来prompt<br>，我一一输出。</p>
+<img src="/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE1.png" srcset="/img/loading.gif" lazyload class="" title="图片引用方法一">
+
+
+<p><strong>2. 大幅度降低了短视频制作的成本</strong></p>
+<p>&nbsp;&nbsp; 只需一个简单的提示词，就能<strong>生成一段制作精良的60秒视频</strong>。时间之长，画面之不失违和，简直令人震惊。</p>
+<p>&nbsp;&nbsp; 支持使用图片或视频片段进行扩展，生成全新的视频。同时也支持将两个视频合并整合成一个新的视频。</p>
+<p>&nbsp;&nbsp; 原先汽车广告视频要花费大量的人力物力，是不是可以AI生成了？电影宣传片是不是也可以？短视频和短片本身就短那就更没问题了吧？（有人甚至认为tiktok都会被取代了）</p>
+<p>&nbsp;&nbsp;但是需要创意和价值观的电影一时半会还不能被替代。因为需要好的估时剧本，好的导演，好的演员，大家配合才能演绎出一个经典的电影。</p>
+<p><strong>3. 生成4K图片</strong></p>
+<p>Sora 还能够生成图像，分辨率高达 2048x2048。除了Midjourney和Dall-E又有了个新的选择。</p>
+<p>Sora一出，马斯克直接大呼：人类彻底完蛋了！</p>
+<img src="/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE2.png" srcset="/img/loading.gif" lazyload class="" title="图片引用方法一">
+<p>马斯克为什么这么说？</p>
+<p>OpenAI科学家Tim Brooks表示，没通过人类预先设定，Sora就自己通过观察大量数据，自然而然学会了关于3D几何形状和一致性的知识。</p>
+<h1 id="三、Sora技术原理简介介绍"><a href="#三、Sora技术原理简介介绍" class="headerlink" title="三、Sora技术原理简介介绍"></a>三、Sora技术原理简介介绍</h1><p><strong>1. Sora的训练受到了大语言模型（Large Language Model）的启发</strong>。</p>
+<img src="/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE3.png" srcset="/img/loading.gif" lazyload class="" title="图片引用方法一">
+
+<p>这些模型通过在互联网规模的数据上进行训练，从而获得了广泛的能力。</p>
+<p>Sora是一种扩散模型，它能够通过从一开始看似静态噪声的视频出发，经过多步骤的噪声去除过程，逐渐生成视频。</p>
+<p>Sora不仅能够一次性生成完整的视频，还能延长已生成的视频。通过让模型能够预见多帧内容，团队成功克服了确保视频中的主体即便暂时消失也能保持一致性的难题。</p>
+<p>与GPT模型类似，Sora采用了Transformer架构，从而实现了卓越的性能扩展。</p>
+<p>OpenAI把视频和图像分解为较小的数据单元——「patches」，每个「patches」相当于GPT中的一个「token」。这种统一的数据表示方法能够在更广泛的视觉数据上训练扩散Transformer，覆盖了不同的持续时间、分辨率和纵横比。</p>
+<p><strong>2. Sora的独特方法如何改变视频生成</strong></p>
+<p>以往，生成模型的方法包括GAN、自回归、扩散模型。它们都有各自的优势和局限性。</p>
+<p>但是！！！<strong>Sora引入的，是一种全新的范式转变——新的建模技术和灵活性，可以处理各种时间、纵横比和分辨率。</strong></p>
+<p>Sora所做的，是把Diffusion和Transformer架构结合在一起，创建了diffusion transformer模型。</p>
+<p>于是，以下功能应运而生——</p>
+<pre><code class="hljs">文字转视频：将文字内容变成视频
+图片转视频：赋予静止图像动态生命
+视频风格转换：改变原有视频的风格
+视频时间延展：可以将视频向前或向后延长
+创造无缝循环视频：制作出看起来永无止境的循环视频
+生成单帧图像视频：将静态图像转化为最高2048 x 2048分辨率的单帧视频
+生成各种格式的视频：支持从1920 x 1080到1080 x 1920之间各种分辨率格式
+模拟虚拟世界：创造出类似于Minecraft等游戏的虚拟世界
+创作短视频：制作最长达一分钟的视频，包含多个短片
+</code></pre>
+<p><strong>3. Sora秘密成分的核心：时空patch</strong></p>
+<p>这种方法使Sora能够有效地处理各种视觉数据，而无需调整大小或填充等预处理步骤。</p>
+<p>这种灵活性确保了每条数据都有助于模型的理解，就像厨师可以使用各种食材，来增强菜肴的风味特征一样。</p>
+<p>时空patch对视频数据详细而灵活的处理，为精确的物理模拟和3D一致性等复杂功能奠定了基础。</p>
+<p>从此，我们可以创建看起来逼真且符合世界物理规则的视频，人类也得以一窥AI创建复杂、动态视觉内容的巨大潜力。</p>
+<p><strong>4. 多样化数据在训练中的作用</strong></p>
+<p>训练数据的质量和多样性，对于模型的性能至关重要。</p>
+<p>传统的视频模型，是在限制性更强的数据集、更短的长度和更窄的目标上进行训练的。</p>
+<p>而Sora利用了庞大而多样的数据集，包括不同持续时间、分辨率和纵横比的视频和图像。</p>
+<p>它能够重新创建像Minecraft这样的数字世界，以及来自Unreal或Unity等系统的模拟世界镜头，以捕捉视频内容的所有角度和各种风格。</p>
+<img src="/2024/02/18/OpenAI-Sora%EF%BC%9A60s%E8%B6%85%E9%95%BF%E9%95%BF%E5%BA%A6%E3%80%81%E8%B6%85%E5%BC%BA%E8%AF%AD%E4%B9%89%E7%90%86%E8%A7%A3%E3%80%81%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E3%80%82%E6%B5%85%E6%9E%90%E6%96%87%E7%94%9F%E8%A7%86%E9%A2%91%E6%A8%A1%E5%9E%8BSora%E4%BB%A5%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86%E7%AE%80%E4%BB%8B/%E5%9B%BE4.png" srcset="/img/loading.gif" lazyload class="" title="图片引用方法一">
+<p>这样，Sora就成了一个「通才」模型，就像GPT-4对于文本一样。</p>
+<h1 id="四、Sora-怎么使用"><a href="#四、Sora-怎么使用" class="headerlink" title="四、Sora 怎么使用"></a>四、Sora 怎么使用</h1><p>目前 openai 官方还未开放 sora 灰度，不过根据文生图模型 DALL·E 案例，一定是先给 ChatGPT Plus 付费用户使用，需要注册或者升级 GPT Plus 可以看这个教程: <a target="_blank" rel="noopener" href="https://chatgptch.github.io/">升级 ChatGPT Plus 教程 ，一分钟完成升级</a></p>
+<p>进不去的小伙伴看这个：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/679539404">知乎教程：升级 ChatGPT Plus ，一分钟完成升级</a></p>
+<p>一位OpenAI员工发推表示，<strong>现在Sora只会在有限的范围内试用（刚方面的专业用户评判其伦理性），现在放出的demo主要是为了获得社会大众对它能力的反应</strong></p>
+<p>现在，标榜要开发负责任AGI的OpenAI，应该不会冒着风险给大众抛出一个潘多拉魔盒。</p>
+<p><strong>笔者认为使用Sora前我们需要有一些准备工作</strong></p>
+<p>在开始之前，确保您已经拥有了OpenAI账目，并获得了Sora的访问权限。准备好您想要转化成视频的文本描述，记住越详细越好。</p>
+<p><strong>&nbsp;&nbsp; 1. Sora使用步骤一：文本描述</strong></p>
+<p>&nbsp;&nbsp; 登录您的OpenAI账户，找到Sora的使用界面。在指定区域输入您的文本描述，可以是一个故事概述、场景描述或是具体的动作指令。</p>
+<p><strong>&nbsp;&nbsp; 2. Sora使用步骤二：生成视频</strong></p>
+<p>&nbsp;&nbsp; 完成文本描述和自定义设置后，点击“生成视频”按钮。Sora将开始处理您的请求，这可能需要几分钟时间。完成后，您可以预览生成的视频。</p>
+<p>需要注意的是，截止2024年2月18日，OpenAI只向部分专业用户开放了Sora的访问权限。普通用户只能观看其发布的演示视频。</p>
+<p><strong>openai sora如何使用的常见问答Q&amp;A</strong></p>
+<p><strong>1.问题：Sora是什么？</strong></p>
+<pre><code class="hljs">Sora是由OpenAI开发的AI视频生成模型。
+Sora可以根据用户提供的描述性文字生成长达60秒的高质量视频。
+Sora的视频包含精细复杂的场景、生动的角色表情和复杂的镜头运动。
+</code></pre>
+<p><strong>2.问题：Sora怎么使用？</strong></p>
+<pre><code class="hljs">登录OpenAI账户并找到Sora的使用界面。
+在指定区域输入您的文本描述，可以是一个故事概述、场景描述或是具体的动作指令。
+点击生成按钮，OpenAI Sora会根据您的文本描述生成视频。
+</code></pre>
+<p><strong>3.问题：Sora的优势有哪些？</strong></p>
+<pre><code class="hljs">Sora具有极强的扩展性，基于Transformer架构，可以应用于各种场景。
+Sora能够生成高质量、高清的视频，展现复杂场景的光影关系、物体的物理遮挡和碰撞关系。
+Sora可以创造出包含多个角色、特定动作类型以及与主题和背景相符的详细场景。
+</code></pre>
+<p><strong>4.问题：Sora的训练原理是什么？</strong></p>
+<pre><code class="hljs">Sora的训练分为两个阶段。首先，使用一个标注模型为训练集中的视频生成详细描述。
+标注模型生成的描述能够更好地指导Sora生成视频。
+Sora利用稳定扩散（Stable Diffusion）技术将静态噪声转换为连贯图像。
+Sora模型采用初步的扩散模型生成视频长度，并逐步消除噪声完成视频。
+</code></pre>
+<h1 id="五、附录"><a href="#五、附录" class="headerlink" title="五、附录"></a>五、附录</h1><p>Google DeepMind早期对NaViT和ViT（视觉Transformer）的研究：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2307.06304">https://arxiv.org/abs/2307.06304</a></p>
+<p>2021年的论文「An Image is Worth 16x16 Words」：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.11929">https://arxiv.org/abs/2010.11929</a></p>
+<p><strong>谢赛宁：Sora很厉害，不过好像是用了我的论文成果</strong>：<a target="_blank" rel="noopener" href="https://wpeebles.com/DiT">https://wpeebles.com/DiT</a></p>
+<p>OpenAI官方Sora技术报告：<a target="_blank" rel="noopener" href="https://www.openai.com/research/sora/">https://www.openai.com/research/sora/</a></p>
+<p>Sora 视频案例：<a target="_blank" rel="noopener" href="https://openai.com/sora">https://openai.com/sora</a></p>
+<p>GPT4注册升级教程参考：<a target="_blank" rel="noopener" href="https://chatgptch.github.io/">ChatGPT指南</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/OpenAI-Sora/" class="category-chain-item">OpenAI Sora</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/OpenAI-Sora/" class="print-no-link">#OpenAI Sora</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>OpenAI Sora：60s超长长度、超强语义理解、世界模型。浅析文生视频模型Sora以及技术原理简介</div>
+      <div>http://example.com/2024/02/18/OpenAI-Sora：60s超长长度、超强语义理解、世界模型。浅析文生视频模型Sora以及技术原理简介/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>ACtoYou</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/06/%E3%80%90%E4%BF%9D%E5%A7%86%E7%BA%A7%E3%80%91%E5%9B%BD%E5%86%85%E5%A6%82%E4%BD%95%E8%B4%AD%E4%B9%B0midjourney%EF%BC%9Fmidjourney%E8%B4%AD%E4%B9%B0%E6%95%99%E7%A8%8B%EF%BC%9Fmidjourney%E6%B3%A8%E5%86%8C/" title="【保姆级】国内如何购买midjourney？midjourney购买教程？midjourney注册教程">
+                        <span class="hidden-mobile">【保姆级】国内如何购买midjourney？midjourney购买教程？midjourney注册教程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"WxERJ8Shpl9p7eFousRDmGdn-gzGzoHsz","appKey":"l8xFc8OEcHT80gfJz7AYpiEK","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
