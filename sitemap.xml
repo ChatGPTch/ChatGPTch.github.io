@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://actoyouai.com/Claude/claude-3-ntroducing-and-using/</loc>
+    
+    <lastmod>2024-03-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://actoyouai.com/link/index.html</loc>
     
     <lastmod>2024-02-27</lastmod>
@@ -103,7 +112,7 @@
 
   <url>
     <loc>https://actoyouai.com/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -111,42 +120,56 @@
   
   <url>
     <loc>https://actoyouai.com/tags/Onlyfans/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/tags/Sora/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/tags/OpenAI/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/tags/ChatGPT/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/tags/%E8%99%9A%E6%8B%9F%E5%8D%A1/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/tags/midjourney/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://actoyouai.com/tags/Claude/</loc>
+    <lastmod>2024-03-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://actoyouai.com/tags/LLM/</loc>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -155,35 +178,42 @@
   
   <url>
     <loc>https://actoyouai.com/categories/Onlyfans/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/categories/OpenAI-Sora/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/categories/ChatGPT/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/categories/%E8%99%9A%E6%8B%9F%E5%8D%A1/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://actoyouai.com/categories/midjourney/</loc>
-    <lastmod>2024-02-28</lastmod>
+    <lastmod>2024-03-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://actoyouai.com/categories/Claude/</loc>
+    <lastmod>2024-03-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
